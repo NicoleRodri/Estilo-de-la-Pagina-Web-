@@ -1,0 +1,810 @@
+import { useState, useEffect } from 'react'
+
+// ── Icons (inline SVG components) ──────────────────────────────────────────
+const IconCalendar = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+  </svg>
+)
+const IconAlert = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+    <polygon points="10.29 3.86 1.82 18 22.18 18 13.71 3.86 10.29 3.86"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+  </svg>
+)
+const IconStethoscope = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6V4a2 2 0 0 0-2-2h-1a.2.2 0 1 0 .3.3"/><path d="M8 15v1a6 6 0 0 0 6 6h0a6 6 0 0 0 6-6v-4"/><circle cx="20" cy="10" r="2"/>
+  </svg>
+)
+const IconFlask = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M10 2v7.31L5.5 19.5A2 2 0 0 0 7.31 22h9.38a2 2 0 0 0 1.81-2.5L14 9.31V2"/><line x1="8.5" y1="2" x2="15.5" y2="2"/>
+  </svg>
+)
+const IconScan = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><line x1="7" y1="12" x2="17" y2="12"/>
+  </svg>
+)
+const IconPill = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+    <path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><line x1="8.5" y1="8.5" x2="15.5" y2="15.5"/>
+  </svg>
+)
+const IconHeart = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+  </svg>
+)
+const IconBrain = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.46 2.5 2.5 0 0 1-1.96-3 2.5 2.5 0 0 1-1.32-4.24 3 3 0 0 1 .34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 4.18-1.98Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.46 2.5 2.5 0 0 0 1.96-3 2.5 2.5 0 0 0 1.32-4.24 3 3 0 0 0-.34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-4.18-1.98Z"/>
+  </svg>
+)
+const IconBone = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M17 10c.7-.7 1.69 0 2.5 0a2.5 2.5 0 1 0 0-5 2.5 2.5 0 1 0-5 0c0 .81.7 1.8 0 2.5l-7 7c-.7.7-1.69 0-2.5 0a2.5 2.5 0 0 0 0 5 2.5 2.5 0 0 0 5 0c0-.81-.7-1.8 0-2.5l7-7Z"/>
+  </svg>
+)
+const IconEye = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+  </svg>
+)
+const IconBaby = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M9 12h.01"/><path d="M15 12h.01"/><path d="M10 16c.5.3 1.2.5 2 .5s1.5-.2 2-.5"/><circle cx="12" cy="11" r="7"/>
+  </svg>
+)
+const IconActivity = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+  </svg>
+)
+const IconUsers = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+  </svg>
+)
+const IconShield = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+  </svg>
+)
+const IconCpu = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/>
+  </svg>
+)
+const IconStar = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+  </svg>
+)
+const IconPhone = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.16 6.16l.98-.88a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+  </svg>
+)
+const IconMap = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+  </svg>
+)
+const IconClock = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+  </svg>
+)
+const IconChevronRight = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="9 18 15 12 9 6"/>
+  </svg>
+)
+const IconMenu = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+  </svg>
+)
+const IconX = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+  </svg>
+)
+const IconFacebook = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+  </svg>
+)
+const IconInstagram = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+  </svg>
+)
+const IconTwitter = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+  </svg>
+)
+const IconLinkedin = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/>
+  </svg>
+)
+
+// ── Data ───────────────────────────────────────────────────────────────────
+const navLinks = ['Inicio', 'Especialidades', 'Servicios', 'Profesionales', 'Nosotros', 'Contacto']
+
+const quickAccess = [
+  { icon: <IconCalendar />, label: 'Agendar Cita', color: 'bg-blue-700', href: '#cita' },
+  { icon: <IconAlert />, label: 'Emergencias', color: 'bg-red-600', href: '#emergencias' },
+  { icon: <IconStethoscope />, label: 'Especialidades', color: 'bg-blue-600', href: '#especialidades' },
+  { icon: <IconFlask />, label: 'Resultados Lab.', color: 'bg-cyan-600', href: '#laboratorio' },
+  { icon: <IconScan />, label: 'Imágenes Dx.', color: 'bg-blue-500', href: '#imagenes' },
+  { icon: <IconPill />, label: 'Farmacia', color: 'bg-teal-600', href: '#farmacia' },
+]
+
+const specialties = [
+  { icon: <IconHeart />, name: 'Cardiología', desc: 'Diagnóstico y tratamiento integral de enfermedades del corazón y sistema cardiovascular.', img: 'photo-1579684385127-1ef15d508118' },
+  { icon: <IconBrain />, name: 'Neurología', desc: 'Atención especializada en trastornos del sistema nervioso central y periférico.', img: 'photo-1516841273335-e39b37888115' },
+  { icon: <IconBone />, name: 'Ortopedia', desc: 'Cirugía y rehabilitación de huesos, articulaciones, músculos y tejidos.', img: 'photo-1504813184591-01572f98c85f' },
+  { icon: <IconEye />, name: 'Oftalmología', desc: 'Cuidado integral de la salud visual y tratamiento de enfermedades oculares.', img: 'photo-1666886573531-48d2e3c2b684' },
+  { icon: <IconBaby />, name: 'Pediatría', desc: 'Atención médica integral para niños y adolescentes en todas sus etapas de desarrollo.', img: 'photo-1758691462743-f9fc9e430d39' },
+  { icon: <IconActivity />, name: 'Medicina Interna', desc: 'Diagnóstico y manejo de enfermedades crónicas y agudas en el adulto.', img: 'photo-1758691461932-d0aa0ebf6b31' },
+]
+
+const services = [
+  { icon: <IconAlert />, name: 'Emergencias 24h', desc: 'Atención de urgencias las 24 horas, todos los días del año.' },
+  { icon: <IconScan />, name: 'Diagnóstico por Imágenes', desc: 'Tomografía, resonancia magnética, radiología y ecografía de alta resolución.' },
+  { icon: <IconFlask />, name: 'Laboratorio Clínico', desc: 'Análisis clínicos con tecnología de punta y resultados en tiempo real.' },
+  { icon: <IconActivity />, name: 'Hospitalización', desc: 'Habitaciones confortables con monitoreo continuo y atención personalizada.' },
+  { icon: <IconStethoscope />, name: 'Cirugía', desc: 'Quirófanos de última generación para procedimientos convencionales y mínimamente invasivos.' },
+  { icon: <IconBaby />, name: 'Maternidad', desc: 'Acompañamiento integral durante el embarazo, parto y puerperio.' },
+  { icon: <IconCalendar />, name: 'Consulta Externa', desc: 'Más de 40 especialidades médicas con agendamiento fácil y rápido.' },
+  { icon: <IconHeart />, name: 'Rehabilitación', desc: 'Programas de recuperación física, respiratoria y neurológica.' },
+]
+
+const trustPoints = [
+  { icon: <IconUsers />, title: 'Profesionales Especializados', desc: 'Equipo médico con formación en las mejores instituciones del país y el exterior.' },
+  { icon: <IconShield />, title: 'Atención Integral', desc: 'Cuidado continuo desde el diagnóstico hasta la recuperación total del paciente.' },
+  { icon: <IconCpu />, title: 'Tecnología Médica', desc: 'Equipamiento de última generación para diagnósticos precisos y tratamientos efectivos.' },
+  { icon: <IconHeart />, title: 'Calidad Humana', desc: 'Cada paciente es atendido con empatía, respeto y dedicación genuina.' },
+]
+
+const doctors = [
+  { name: 'Dra. Carolina Mendoza', specialty: 'Cardiología', img: 'photo-1559839734-2b71ea197ec2', years: '15 años de experiencia' },
+  { name: 'Dr. Andrés Restrepo', specialty: 'Neurología', img: 'photo-1612349317150-e413f6a5b16d', years: '12 años de experiencia' },
+  { name: 'Dra. Valentina Torres', specialty: 'Pediatría', img: 'photo-1594824476967-48c8b964273f', years: '10 años de experiencia' },
+  { name: 'Dr. Sebastián Vargas', specialty: 'Ortopedia', img: 'photo-1622253692010-333f2da6031d', years: '18 años de experiencia' },
+]
+
+const testimonials = [
+  { name: 'María Fernanda Ruiz', text: 'La atención fue excepcional. Me sentí acompañada en todo momento, desde el diagnóstico hasta mi recuperación. El equipo médico transmite una calidez y profesionalismo únicos.', rating: 5 },
+  { name: 'Carlos Andrade', text: 'Vine de urgencia a las 3 de la mañana y la atención fue inmediata. Los médicos explicaron cada paso del procedimiento con claridad y paciencia.', rating: 5 },
+  { name: 'Lucía Bermúdez', text: 'Las instalaciones son modernas y el personal de enfermería extraordinario. Mi hijo fue tratado con mucho cariño. Sin duda, el mejor hospital que he conocido.', rating: 5 },
+]
+
+// ── Components ─────────────────────────────────────────────────────────────
+
+function Header({ scrolled }: { scrolled: boolean }) {
+  const [menuOpen, setMenuOpen] = useState(false)
+
+  return (
+    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      scrolled ? 'bg-white shadow-sm border-b border-slate-100' : 'bg-white/95 backdrop-blur-sm'
+    }`}>
+      {/* Top bar */}
+      <div className="bg-blue-800 text-white text-sm">
+        <div className="max-w-7xl mx-auto px-6 py-2 flex items-center justify-between">
+          <div className="flex items-center gap-6">
+            <a href="tel:+573001234567" className="flex items-center gap-1.5 hover:text-blue-200 transition-colors">
+              <IconPhone /><span>+57 300 123 4567</span>
+            </a>
+            <span className="hidden sm:flex items-center gap-1.5 text-blue-200">
+              <IconClock /><span>Lun–Vie 7am–8pm · Sáb 8am–2pm</span>
+            </span>
+          </div>
+          <a href="tel:+573001234567" className="flex items-center gap-1.5 font-semibold text-red-300 hover:text-red-200 transition-colors">
+            <IconAlert /><span>Emergencias 24h</span>
+          </a>
+        </div>
+      </div>
+      {/* Main nav */}
+      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+        {/* Logo */}
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-blue-700 rounded-lg flex items-center justify-center">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 5v14M5 12h14"/>
+            </svg>
+          </div>
+          <div>
+            <div className="font-display font-700 text-blue-900 text-lg leading-tight" style={{fontFamily:'Poppins,sans-serif',fontWeight:700}}>Hospital</div>
+            <div className="font-display text-blue-600 text-xs tracking-widest uppercase leading-tight" style={{fontFamily:'Poppins,sans-serif'}}>San Rafael</div>
+          </div>
+        </div>
+
+        {/* Desktop nav */}
+        <nav className="hidden lg:flex items-center gap-8">
+          {navLinks.map(link => (
+            <a key={link} href={`#${link.toLowerCase()}`}
+              className="text-slate-600 text-sm font-medium hover:text-blue-700 transition-colors relative group">
+              {link}
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-200"/>
+            </a>
+          ))}
+        </nav>
+
+        <div className="flex items-center gap-3">
+          <a href="#cita" className="hidden sm:inline-flex items-center gap-2 px-5 py-2.5 bg-blue-700 text-white text-sm font-semibold rounded-lg hover:bg-blue-800 transition-colors shadow-sm shadow-blue-200">
+            <IconCalendar />
+            <span>Agendar una cita</span>
+          </a>
+          <button onClick={() => setMenuOpen(!menuOpen)} className="lg:hidden p-2 text-slate-600 hover:text-blue-700 transition-colors">
+            {menuOpen ? <IconX /> : <IconMenu />}
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile menu */}
+      {menuOpen && (
+        <div className="lg:hidden bg-white border-t border-slate-100 px-6 py-4">
+          <nav className="flex flex-col gap-4">
+            {navLinks.map(link => (
+              <a key={link} href={`#${link.toLowerCase()}`} onClick={() => setMenuOpen(false)}
+                className="text-slate-700 font-medium py-1 hover:text-blue-700 transition-colors">
+                {link}
+              </a>
+            ))}
+            <a href="#cita" className="mt-2 inline-flex items-center justify-center gap-2 px-5 py-3 bg-blue-700 text-white font-semibold rounded-lg hover:bg-blue-800 transition-colors">
+              <IconCalendar />Agendar una cita
+            </a>
+          </nav>
+        </div>
+      )}
+    </header>
+  )
+}
+
+function Hero() {
+  return (
+    <section className="relative min-h-screen flex items-center overflow-hidden bg-slate-50" style={{paddingTop:'104px'}}>
+      {/* Background image */}
+      <div className="absolute inset-0">
+        <img
+          src="https://images.unsplash.com/photo-1666886573531-48d2e3c2b684?w=1800&h=1000&fit=crop&auto=format"
+          alt="Médico mostrando información a paciente en tableta digital"
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-950/90 via-blue-900/75 to-transparent"/>
+      </div>
+
+      <div className="relative max-w-7xl mx-auto px-6 w-full py-20">
+        <div className="max-w-2xl">
+          {/* Badge */}
+          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 text-blue-100 text-xs font-medium px-3 py-1.5 rounded-full mb-6">
+            <span className="w-1.5 h-1.5 bg-green-400 rounded-full"/>
+            Atención médica de excelencia
+          </div>
+
+          <h1 className="text-5xl md:text-6xl font-bold text-white leading-tight mb-6" style={{fontFamily:'Poppins,sans-serif'}}>
+            Tu salud en<br/>
+            <span className="text-blue-300">las mejores manos</span>
+          </h1>
+
+          <p className="text-lg text-blue-100 leading-relaxed mb-10 max-w-xl">
+            Atención médica integral con tecnología de punta y un equipo humano comprometido con tu bienestar y el de tu familia.
+          </p>
+
+          <div className="flex flex-col sm:flex-row gap-4 mb-12">
+            <a href="#cita" className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-500 transition-colors shadow-lg shadow-blue-900/30">
+              <IconCalendar />Agendar una cita
+            </a>
+            <a href="#servicios" className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white/10 backdrop-blur-sm border border-white/30 text-white font-semibold rounded-lg hover:bg-white/20 transition-colors">
+              Conoce nuestros servicios<IconChevronRight />
+            </a>
+          </div>
+
+          {/* Emergency card */}
+          <div className="inline-flex items-center gap-4 bg-red-600/90 backdrop-blur-sm rounded-xl px-5 py-3.5 border border-red-500/50">
+            <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center text-white">
+              <IconAlert />
+            </div>
+            <div>
+              <div className="text-white font-semibold text-sm">Emergencias 24 horas</div>
+              <a href="tel:+573001234567" className="text-red-200 text-xs hover:text-white transition-colors font-medium">+57 300 123 4567</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Stat strip */}
+      <div className="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-sm border-t border-slate-200">
+        <div className="max-w-7xl mx-auto px-6 py-5 grid grid-cols-2 md:grid-cols-4 gap-6">
+          {[
+            { value: '+40', label: 'Especialidades' },
+            { value: '+200', label: 'Profesionales' },
+            { value: '24/7', label: 'Emergencias' },
+            { value: '15 años', label: 'De excelencia' },
+          ].map(s => (
+            <div key={s.label} className="text-center">
+              <div className="text-2xl font-bold text-blue-700" style={{fontFamily:'Poppins,sans-serif'}}>{s.value}</div>
+              <div className="text-xs text-slate-500 font-medium mt-0.5">{s.label}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function QuickAccess() {
+  return (
+    <section className="py-16 bg-white">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="text-center mb-10">
+          <h2 className="text-2xl font-bold text-slate-800" style={{fontFamily:'Poppins,sans-serif'}}>Accesos rápidos</h2>
+          <p className="text-slate-500 mt-2 text-sm">Encuentra lo que necesitas en segundos</p>
+        </div>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+          {quickAccess.map(item => (
+            <a key={item.label} href={item.href}
+              className="group flex flex-col items-center gap-3 p-5 rounded-2xl bg-slate-50 border border-slate-100 hover:border-blue-200 hover:bg-blue-50 hover:shadow-md hover:shadow-blue-100 transition-all duration-200">
+              <div className={`w-12 h-12 ${item.color} text-white rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform`}>
+                {item.icon}
+              </div>
+              <span className="text-sm font-medium text-slate-700 text-center leading-tight group-hover:text-blue-700 transition-colors">{item.label}</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function Specialties() {
+  return (
+    <section id="especialidades" className="py-20 bg-slate-50">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
+          <div>
+            <span className="text-blue-600 text-sm font-semibold tracking-wider uppercase">Nuestras especialidades</span>
+            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mt-2" style={{fontFamily:'Poppins,sans-serif'}}>
+              Atención médica<br/>especializada
+            </h2>
+          </div>
+          <a href="#" className="text-blue-700 font-semibold text-sm flex items-center gap-1 hover:gap-2 transition-all group">
+            Ver todas las especialidades<IconChevronRight />
+          </a>
+        </div>
+
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {specialties.map(s => (
+            <div key={s.name} className="group bg-white rounded-2xl overflow-hidden border border-slate-100 hover:border-blue-200 hover:shadow-lg hover:shadow-blue-50 transition-all duration-300">
+              <div className="h-44 overflow-hidden bg-blue-50">
+                <img
+                  src={`https://images.unsplash.com/${s.img}?w=600&h=300&fit=crop&auto=format`}
+                  alt={s.name}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+              </div>
+              <div className="p-6">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-9 h-9 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center">
+                    {s.icon}
+                  </div>
+                  <h3 className="font-semibold text-slate-900" style={{fontFamily:'Poppins,sans-serif'}}>{s.name}</h3>
+                </div>
+                <p className="text-slate-500 text-sm leading-relaxed mb-4">{s.desc}</p>
+                <a href="#" className="inline-flex items-center gap-1 text-blue-700 text-sm font-semibold hover:gap-2 transition-all">
+                  Ver especialidad<IconChevronRight />
+                </a>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function Services() {
+  return (
+    <section id="servicios" className="py-20 bg-white">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="text-center mb-14">
+          <span className="text-blue-600 text-sm font-semibold tracking-wider uppercase">Lo que ofrecemos</span>
+          <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mt-2" style={{fontFamily:'Poppins,sans-serif'}}>Servicios del hospital</h2>
+          <p className="text-slate-500 mt-3 max-w-xl mx-auto">Contamos con todos los servicios necesarios para cuidar tu salud en cada etapa de la vida.</p>
+        </div>
+
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {services.map(s => (
+            <div key={s.name} className="group p-6 rounded-2xl border border-slate-100 hover:border-blue-200 hover:bg-blue-50/50 hover:shadow-md transition-all duration-200">
+              <div className="w-11 h-11 bg-blue-700 text-white rounded-xl flex items-center justify-center mb-4 group-hover:bg-blue-600 transition-colors">
+                {s.icon}
+              </div>
+              <h3 className="font-semibold text-slate-900 mb-2" style={{fontFamily:'Poppins,sans-serif'}}>{s.name}</h3>
+              <p className="text-slate-500 text-sm leading-relaxed">{s.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function TrustSection() {
+  return (
+    <section className="py-20 bg-blue-950 relative overflow-hidden">
+      <div className="absolute inset-0 opacity-5">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-blue-400 rounded-full -translate-y-48 translate-x-48"/>
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-300 rounded-full translate-y-32 -translate-x-32"/>
+      </div>
+      <div className="relative max-w-7xl mx-auto px-6">
+        <div className="grid lg:grid-cols-2 gap-16 items-center">
+          <div>
+            <span className="text-blue-300 text-sm font-semibold tracking-wider uppercase">Por qué elegirnos</span>
+            <h2 className="text-3xl md:text-4xl font-bold text-white mt-3 mb-6" style={{fontFamily:'Poppins,sans-serif'}}>
+              Experiencia que<br/>inspira confianza
+            </h2>
+            <p className="text-blue-200 leading-relaxed mb-8">
+              Más de 15 años siendo el hospital de referencia de la región, con un equipo médico comprometido con la excelencia y la calidez humana en cada atención.
+            </p>
+            <div className="grid grid-cols-2 gap-6">
+              {trustPoints.map(p => (
+                <div key={p.title} className="flex flex-col gap-3">
+                  <div className="w-11 h-11 bg-white/10 text-blue-300 rounded-xl flex items-center justify-center">
+                    {p.icon}
+                  </div>
+                  <div>
+                    <div className="text-white font-semibold text-sm" style={{fontFamily:'Poppins,sans-serif'}}>{p.title}</div>
+                    <div className="text-blue-300 text-xs mt-1 leading-relaxed">{p.desc}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="relative">
+            <div className="rounded-2xl overflow-hidden aspect-[4/3] bg-blue-900">
+              <img
+                src="https://images.unsplash.com/photo-1504813184591-01572f98c85f?w=800&h=600&fit=crop&auto=format"
+                alt="Equipo médico profesional trabajando juntos"
+                className="w-full h-full object-cover opacity-90"
+              />
+            </div>
+            <div className="absolute -bottom-6 -left-6 bg-white rounded-2xl p-5 shadow-xl max-w-xs">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-8 h-8 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-xs font-bold">✓</div>
+                <span className="text-slate-800 font-semibold text-sm" style={{fontFamily:'Poppins,sans-serif'}}>Acreditación Nacional</span>
+              </div>
+              <p className="text-slate-500 text-xs">Hospital acreditado por los estándares de calidad del Ministerio de Salud.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function Doctors() {
+  return (
+    <section id="profesionales" className="py-20 bg-white">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="text-center mb-14">
+          <span className="text-blue-600 text-sm font-semibold tracking-wider uppercase">Nuestro equipo</span>
+          <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mt-2" style={{fontFamily:'Poppins,sans-serif'}}>Encuentra a tu especialista</h2>
+          <p className="text-slate-500 mt-3">Médicos formados en las mejores instituciones, comprometidos con tu salud.</p>
+        </div>
+
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {doctors.map(d => (
+            <div key={d.name} className="group text-center">
+              <div className="relative mb-4 mx-auto w-fit">
+                <div className="w-36 h-36 rounded-2xl overflow-hidden bg-blue-50 mx-auto">
+                  <img
+                    src={`https://images.unsplash.com/${d.img}?w=300&h=300&fit=crop&auto=format&face`}
+                    alt={d.name}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                </div>
+                <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 5v14M5 12h14"/>
+                  </svg>
+                </div>
+              </div>
+              <h3 className="font-semibold text-slate-900" style={{fontFamily:'Poppins,sans-serif'}}>{d.name}</h3>
+              <p className="text-blue-600 text-sm font-medium mt-0.5">{d.specialty}</p>
+              <p className="text-slate-400 text-xs mt-1 mb-4">{d.years}</p>
+              <a href="#cita" className="inline-flex items-center gap-1.5 px-4 py-2 border border-blue-200 text-blue-700 text-sm font-medium rounded-lg hover:bg-blue-700 hover:text-white hover:border-blue-700 transition-all">
+                Agendar cita
+              </a>
+            </div>
+          ))}
+        </div>
+
+        <div className="text-center mt-10">
+          <a href="#" className="inline-flex items-center gap-2 px-6 py-3 border border-slate-200 text-slate-700 font-medium rounded-lg hover:border-blue-300 hover:text-blue-700 transition-all">
+            Ver todos los profesionales<IconChevronRight />
+          </a>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function PatientExperience() {
+  return (
+    <section className="py-20 bg-slate-50">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="grid lg:grid-cols-2 gap-16 items-center">
+          <div className="order-2 lg:order-1">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="rounded-2xl overflow-hidden aspect-[3/4] bg-blue-100">
+                <img
+                  src="https://images.unsplash.com/photo-1516841273335-e39b37888115?w=400&h=550&fit=crop&auto=format"
+                  alt="Médicos en pasillo de hospital moderno"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="flex flex-col gap-4 pt-8">
+                <div className="rounded-2xl overflow-hidden aspect-square bg-blue-50">
+                  <img
+                    src="https://images.unsplash.com/photo-1758691462743-f9fc9e430d39?w=400&h=400&fit=crop&auto=format"
+                    alt="Médico en consulta"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="bg-blue-700 rounded-2xl p-5 text-white">
+                  <div className="text-3xl font-bold" style={{fontFamily:'Poppins,sans-serif'}}>98%</div>
+                  <div className="text-blue-200 text-sm mt-1">Pacientes satisfechos</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="order-1 lg:order-2">
+            <span className="text-blue-600 text-sm font-semibold tracking-wider uppercase">Experiencia del paciente</span>
+            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mt-3 mb-6" style={{fontFamily:'Poppins,sans-serif'}}>
+              Acompañamos cada<br/>paso de tu recuperación
+            </h2>
+            <p className="text-slate-600 leading-relaxed mb-6">
+              Entendemos que una hospitalización va más allá del tratamiento médico. Por eso, acompañamos tanto al paciente como a su familia con atención integral, comunicación clara y un ambiente de calidez y confianza.
+            </p>
+            <p className="text-slate-600 leading-relaxed mb-8">
+              Nuestro modelo de atención centrado en la persona garantiza que cada decisión clínica se tome con respeto por tus valores, tus necesidades y tu dignidad.
+            </p>
+
+            {/* Testimonials */}
+            <div className="space-y-4">
+              {testimonials.slice(0, 2).map(t => (
+                <div key={t.name} className="bg-white rounded-xl p-5 border border-slate-100">
+                  <div className="flex items-center gap-1 mb-2">
+                    {Array.from({length: t.rating}).map((_, i) => (
+                      <span key={i} className="text-yellow-400 text-xs"><IconStar /></span>
+                    ))}
+                  </div>
+                  <p className="text-slate-600 text-sm leading-relaxed mb-3 italic">"{t.text}"</p>
+                  <span className="text-slate-800 font-semibold text-sm">{t.name}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function AppointmentCTA() {
+  const [form, setForm] = useState({ name: '', phone: '', specialty: '', date: '' })
+
+  return (
+    <section id="cita" className="py-20 bg-blue-700 relative overflow-hidden">
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] border border-white rounded-full -translate-y-1/2 translate-x-1/4"/>
+        <div className="absolute bottom-0 left-0 w-72 h-72 border border-white rounded-full translate-y-1/2 -translate-x-1/4"/>
+      </div>
+      <div className="relative max-w-7xl mx-auto px-6">
+        <div className="grid lg:grid-cols-2 gap-16 items-center">
+          <div>
+            <h2 className="text-4xl md:text-5xl font-bold text-white leading-tight mb-4" style={{fontFamily:'Poppins,sans-serif'}}>
+              Tu salud merece<br/>atención y confianza.
+            </h2>
+            <p className="text-blue-200 text-lg leading-relaxed mb-8">
+              Agenda tu cita de forma rápida y sencilla. Nuestro equipo te contactará para confirmar tu atención.
+            </p>
+            <div className="flex flex-col gap-3">
+              {['Más de 40 especialidades disponibles', 'Confirmación inmediata por WhatsApp', 'Atención presencial y telemedicina', 'Sin costo de agendamiento'].map(item => (
+                <div key={item} className="flex items-center gap-3">
+                  <div className="w-5 h-5 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                  </div>
+                  <span className="text-blue-100 text-sm">{item}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Form */}
+          <div className="bg-white rounded-2xl p-8 shadow-2xl">
+            <h3 className="text-xl font-bold text-slate-900 mb-6" style={{fontFamily:'Poppins,sans-serif'}}>Agenda tu cita</h3>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1.5">Nombre completo</label>
+                <input
+                  type="text"
+                  placeholder="Ej: María García"
+                  value={form.name}
+                  onChange={e => setForm({...form, name: e.target.value})}
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 text-slate-800 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all placeholder:text-slate-400"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1.5">Teléfono / WhatsApp</label>
+                <input
+                  type="tel"
+                  placeholder="+57 300 000 0000"
+                  value={form.phone}
+                  onChange={e => setForm({...form, phone: e.target.value})}
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 text-slate-800 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all placeholder:text-slate-400"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1.5">Especialidad</label>
+                <select
+                  value={form.specialty}
+                  onChange={e => setForm({...form, specialty: e.target.value})}
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 text-slate-800 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all bg-white">
+                  <option value="">Seleccionar especialidad</option>
+                  {specialties.map(s => <option key={s.name} value={s.name}>{s.name}</option>)}
+                  <option value="Medicina General">Medicina General</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1.5">Fecha preferida</label>
+                <input
+                  type="date"
+                  value={form.date}
+                  onChange={e => setForm({...form, date: e.target.value})}
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 text-slate-800 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all"
+                />
+              </div>
+              <button className="w-full py-4 bg-blue-700 text-white font-semibold rounded-xl hover:bg-blue-800 transition-colors mt-2 shadow-md shadow-blue-200">
+                Solicitar cita
+              </button>
+              <p className="text-xs text-slate-400 text-center">Tu información es confidencial y está protegida.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function Footer() {
+  return (
+    <footer className="bg-slate-900 text-slate-400">
+      <div className="max-w-7xl mx-auto px-6 py-16">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+          {/* Brand */}
+          <div className="lg:col-span-1">
+            <div className="flex items-center gap-3 mb-5">
+              <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 5v14M5 12h14"/>
+                </svg>
+              </div>
+              <div>
+                <div className="text-white font-bold" style={{fontFamily:'Poppins,sans-serif'}}>Hospital San Rafael</div>
+                <div className="text-blue-400 text-xs tracking-wider uppercase">Salud con excelencia</div>
+              </div>
+            </div>
+            <p className="text-sm leading-relaxed mb-6">Comprometidos con tu salud y bienestar desde 2009. Atención de alta calidad para toda la familia.</p>
+            <div className="flex items-center gap-3">
+              {[IconFacebook, IconInstagram, IconTwitter, IconLinkedin].map((Icon, i) => (
+                <a key={i} href="#" className="w-9 h-9 bg-slate-800 hover:bg-blue-600 text-slate-400 hover:text-white rounded-lg flex items-center justify-center transition-all">
+                  <Icon />
+                </a>
+              ))}
+            </div>
+          </div>
+
+          {/* Services */}
+          <div>
+            <h4 className="text-white font-semibold mb-5 text-sm" style={{fontFamily:'Poppins,sans-serif'}}>Servicios</h4>
+            <ul className="space-y-3 text-sm">
+              {['Emergencias 24h', 'Consulta Externa', 'Cirugía', 'Hospitalización', 'Laboratorio', 'Imágenes Dx.', 'Maternidad', 'Rehabilitación'].map(s => (
+                <li key={s}><a href="#" className="hover:text-blue-400 transition-colors">{s}</a></li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Links */}
+          <div>
+            <h4 className="text-white font-semibold mb-5 text-sm" style={{fontFamily:'Poppins,sans-serif'}}>Información</h4>
+            <ul className="space-y-3 text-sm">
+              {['Nosotros', 'Nuestros Profesionales', 'Acreditaciones', 'Noticias', 'Resultados en Línea', 'Portal del Paciente', 'Trabaja con Nosotros', 'Proveedores'].map(l => (
+                <li key={l}><a href="#" className="hover:text-blue-400 transition-colors">{l}</a></li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Contact */}
+          <div>
+            <h4 className="text-white font-semibold mb-5 text-sm" style={{fontFamily:'Poppins,sans-serif'}}>Contacto</h4>
+            <div className="space-y-4 text-sm">
+              <div className="flex items-start gap-3">
+                <IconMap />
+                <span>Av. Principal #45-67, Centro Médico, Ciudad</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <IconPhone />
+                <div>
+                  <div className="text-white font-medium">+57 300 123 4567</div>
+                  <div className="text-xs">Central de citas</div>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <IconAlert />
+                <div>
+                  <div className="text-red-400 font-semibold">Emergencias</div>
+                  <div className="text-white">+57 300 999 9999</div>
+                  <div className="text-xs">Disponible 24/7</div>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <IconClock />
+                <div>
+                  <div className="text-white font-medium">Horario</div>
+                  <div>Lun–Vie: 7:00am – 8:00pm</div>
+                  <div>Sábados: 8:00am – 2:00pm</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs">
+          <p>© 2025 Hospital San Rafael. Todos los derechos reservados.</p>
+          <div className="flex items-center gap-6">
+            <a href="#" className="hover:text-blue-400 transition-colors">Política de privacidad</a>
+            <a href="#" className="hover:text-blue-400 transition-colors">Términos y condiciones</a>
+            <a href="#" className="hover:text-blue-400 transition-colors">Habeas Data</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  )
+}
+
+// ── App ────────────────────────────────────────────────────────────────────
+export default function App() {
+  const [scrolled, setScrolled] = useState(false)
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 20)
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  return (
+    <div className="min-h-screen">
+      <Header scrolled={scrolled} />
+      <main>
+        <Hero />
+        <QuickAccess />
+        <Specialties />
+        <Services />
+        <TrustSection />
+        <Doctors />
+        <PatientExperience />
+        <AppointmentCTA />
+      </main>
+      <Footer />
+    </div>
+  )
+}
